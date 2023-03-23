@@ -1,4 +1,4 @@
-# Gmail Importance Classifier
+# Gmail Importance Classifier using GPT-3
 
 This script uses OpenAI's GPT-3 to classify the importance of unread emails in Gmail and labels them accordingly. The labels used are:
 - gptJunk (for junk or spam)
