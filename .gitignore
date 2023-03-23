@@ -1,0 +1,5 @@
+venv/
+credentials.json
+openaiapikey.txt
+token.pickle
+.DS_Store
