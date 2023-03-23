@@ -14,9 +14,10 @@ with open('openaikey.txt', 'r') as file:
     openai.api_key = file.read().replace('\n', '')
 
 
+
 def evaluate_importance(sender, subject, body):
     # delay 1 second to avoid rate limiting
-    time.sleep(3)
+    time.sleep(4)
     # Remove markup from body using BeautifulSoup
     soup = BeautifulSoup(body, "html.parser")
     body = soup.get_text()
@@ -33,7 +34,7 @@ def evaluate_importance(sender, subject, body):
                 "2 - Non-urgent updates from companies or organizations (newsletters, product updates, etc.)\n"
                 "3 - General correspondence or updates (personal messages, social media notifications, etc.)\n"
                 "4 - Important personal messages (from close friends or family members, urgent updates, personal emergencies)\n"
-                "5 - Urgent or time-sensitive messages (medical or financial alerts, travel updates, etc.)\n"
+                "5 - Urgent or time-sensitive messages (medical or financial alerts, travel updates, failed payments, etc.)\n"
                 "Please note that coupons or deals should be considered as junk or spam unless they are specifically requested by the recipient.\n"
                 "Please provide a score and nothing else for the following email:\n"
                 f"Sender: {sender}\n"
@@ -45,6 +46,7 @@ def evaluate_importance(sender, subject, body):
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0,
+            timeout=3 # Add a 3 second timeout
         )
         importance = response.choices[0].text.strip()
         print(f"Importance: {importance}")
@@ -63,9 +65,26 @@ def evaluate_importance(sender, subject, body):
         else:
             return None
 
-    except Exception as e:
-        print(f"Error during importance evaluation: {e}")
+    except openai.error.APIError as e:
+        print(f"OpenAI API timed out while evaluating importance: {e}")
         return None
+
+def create_and_get_label_ids_by_name(service, label_names):
+    label_ids = get_label_ids_by_name(service, label_names)
+    missing_labels = [label for label in label_names if label not in label_ids]
+    
+    for missing_label in missing_labels:
+        label = {
+            'name': missing_label,
+            'labelListVisibility': 'labelShow',
+            'messageListVisibility': 'show'
+        }
+        created_label = service.users().labels().create(userId='me', body=label).execute()
+        print(f"Created label: {missing_label}")
+        label_ids[missing_label] = created_label['id']
+    
+    return label_ids
+
 
 # Define function to connect to Gmail API
 def connect_gmail_api():
@@ -111,7 +130,7 @@ def get_label_ids_by_name(service, label_names):
 def label_unread_emails(service, label_ids):
     print("Labeling unread emails...")
     try:
-        results = service.users().messages().list(userId='me', q='is:unread -label:gptUrgent -label:gptHigh -label:gptNormal -label:gptLow -label:gptCrap').execute()
+        results = service.users().messages().list(userId='me', q='is:unread -label:gptUrgent -label:gptImportant -label:gptNormal -label:gptLow -label:gptJunk').execute()
         print(f"Found {len(results['messages'])} unread messages.")
         messages = results.get('messages', [])
         if not messages:
@@ -161,7 +180,7 @@ def main():
     service = connect_gmail_api()
     print("Connected to Gmail API")
     if service:
-        label_ids = get_label_ids_by_name(service, ['gptUrgent', 'gptImportant', 'gptNormal', 'gptLow', 'gptJunk'])
+        label_ids = create_and_get_label_ids_by_name(service, ['gptUrgent', 'gptImportant', 'gptNormal', 'gptLow', 'gptJunk'])
         if label_ids:
             print(f"Label IDs: {label_ids}")
             label_unread_emails(service, label_ids)
@@ -173,5 +192,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
