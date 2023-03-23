@@ -14,6 +14,7 @@ To run this script, you need:
 - A Google Cloud Platform project with the Gmail API enabled
 - Credentials for the Gmail API
 - An OpenAI API key
+- Add the labels listed above to your gmail account
 
 ## Installation
 
@@ -26,7 +27,7 @@ To run this script, you need:
 ## Usage
 
 1. Run the script by running `python gmail_assist.py`
-2. The script will connect to the Gmail API and label the unread emails based on their importance
+2. The script will connect to the Gmail API and find *unread* emails *not already labeled* by the script. They will be labeled based on their importance. 
 
 ## License
 
