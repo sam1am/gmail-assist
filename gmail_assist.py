@@ -51,13 +51,13 @@ def evaluate_importance(sender, subject, body):
 
         # Update the importance value to match the keys in the label_ids dictionary
         if importance == "1":
-            return "gptCrap"
+            return "gptJunk"
         elif importance == "2":
                 return "gptLow"
         elif importance == "3":
             return "gptNormal"
         elif importance == "4":
-            return "gptHigh"
+            return "gptImportant"
         elif importance == "5":
             return "gptUrgent"
         else:
@@ -161,7 +161,7 @@ def main():
     service = connect_gmail_api()
     print("Connected to Gmail API")
     if service:
-        label_ids = get_label_ids_by_name(service, ['gptUrgent', 'gptHigh', 'gptNormal', 'gptLow', 'gptCrap'])
+        label_ids = get_label_ids_by_name(service, ['gptUrgent', 'gptImportant', 'gptNormal', 'gptLow', 'gptJunk'])
         if label_ids:
             print(f"Label IDs: {label_ids}")
             label_unread_emails(service, label_ids)

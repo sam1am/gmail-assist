@@ -1,10 +1,10 @@
 # Gmail Importance Classifier
 
 This script uses OpenAI's GPT-3 to classify the importance of unread emails in Gmail and labels them accordingly. The labels used are:
-- gptCrap (for junk or spam)
+- gptJunk (for junk or spam)
 - gptLow (for non-urgent updates from companies or organizations)
 - gptNormal (for general correspondence or updates)
-- gptHigh (for important personal messages)
+- gptImportant (for important personal messages)
 - gptUrgent (for urgent or time-sensitive messages)
 
 ## Prerequisites
@@ -22,7 +22,7 @@ To run this script, you need:
 2. Install the required Python packages by running `pip install -r requirements.txt`
 3. Set up the Google Cloud Platform project and the Gmail API credentials by following the instructions [here](https://developers.google.com/gmail/api/quickstart/python) and saving the credentials file as `credentials.json` in the project directory
 4. Obtain an OpenAI API key by following the instructions [here](https://beta.openai.com/docs/quickstart)
-5. Save the OpenAI API key to a text file named `openaiapikey.txt` in the project directory
+5. Save the OpenAI API key to a text file named `openaikey.txt` in the project directory
 
 ## Usage
 
