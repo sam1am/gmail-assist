@@ -26,8 +26,9 @@ To run this script, you need:
 
 ## Usage
 
-1. Run the script by running `python gmail_assist.py`
-2. The script will connect to the Gmail API and find *unread* emails *not already labeled* by the script. They will be labeled based on their importance. 
+1. Customize the `prompt.txt` file as desired.
+2. Run the script by running `python gmail_assist.py`
+3. The script will connect to the Gmail API and find *unread* emails *not already labeled* by the script. They will be labeled based on their importance. 
 
 ## License
 

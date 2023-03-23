@@ -105,7 +105,7 @@ def label_unread_emails(service, label_ids):
                     label_id = label_ids.get(importance)
                     if label_id:
                         service.users().messages().modify(userId='me', id=message['id'], body={'addLabelIds': [label_id]}).execute()
-                        print(colored(f"Message {message['id']} labeled as {importance}\n", 'blue'))
+                        print(colored(f"✓{importance}\n", 'blue'))
                     else:
                         print(f"Error: Invalid importance rating for message {message['id']}")
                 else:
