@@ -7,6 +7,8 @@ This script uses OpenAI's GPT-3 to classify the importance of unread emails in G
 - gptImportant (for important personal messages)
 - gptUrgent (for urgent or time-sensitive messages)
 
+Note: This is a proof of concept and, while it works, it could use some improvements. Be patient as it processes. 
+
 ## Prerequisites
 
 To run this script, you need:
