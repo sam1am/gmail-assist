@@ -36,6 +36,8 @@ To run this script, you need:
 
 What you do with them from there is up to you. The emails will not be modified in any other way. The tags can be used for bulk processing or creating other rules.
 
+To process another account, delete the token.pickle file that was created when you first authenticated and run the script again.
+
 ## What's Next 
 
 This started as a Thunderbird plugin which had the benefit of running on every new email that comes in. I may try to implement that. 
