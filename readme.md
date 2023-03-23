@@ -1,13 +1,14 @@
 # Gmail Importance Classifier using GPT-3
 
 This script uses OpenAI's GPT-3 to classify the importance of unread emails in Gmail and labels them accordingly. The labels used are:
-- gptJunk (for junk or spam)
-- gptLow (for non-urgent updates from companies or organizations)
-- gptNormal (for general correspondence or updates)
-- gptImportant (for important personal messages)
-- gptUrgent (for urgent or time-sensitive messages)
 
-Note: This is a proof of concept and, while it works, it could use some improvements. Be patient as it processes. 
+- gptJunk
+- gptLow
+- gptNormal 
+- gptImportant
+- gptUrgent 
+
+This is a proof of concept. It works but it's not very optimized. Be patient. YMMV. 
 
 ## Prerequisites
 
@@ -28,9 +29,18 @@ To run this script, you need:
 
 ## Usage
 
-1. Customize the `prompt.txt` file as desired.
+1. (optional) Customize the `prompt.txt` file as desired.
+2. (optional) Modify the model used in openai_api.py (line 25) - text-davinci-0003 by default.
 2. Run the script by running `python gmail_assist.py`
 3. The script will connect to the Gmail API and find *unread* emails *not already labeled* by the script. They will be labeled based on their importance. 
+
+What you do with them from there is up to you. The emails will not be modified in any other way. The tags can be used for bulk processing or creating other rules.
+
+## What's Next 
+
+This started as a Thunderbird plugin which had the benefit of running on every new email that comes in. I may try to implement that. 
+
+I will accept pull requests from anyone who wants to help build this out more. 
 
 ## License
 
