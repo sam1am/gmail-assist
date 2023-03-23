@@ -5,7 +5,8 @@ I will provide an email and you will respond with a score from 1 to 5 based on h
 4 - Important personal messages (from close friends or family members, urgent updates, personal emergencies, delivery notifications, authentication codes)
 5 - Urgent or time-sensitive messages (medical or financial alerts, travel updates, failed payments, etc.)
 Please note that coupons or deals should be considered as junk or spam unless they are specifically requested by the recipient.
-Whitelist and score and 3 or above emails related to: Going.com
+Whitelist and score and 3 or above emails related to: Flight Deals
+Blacklist and score 1 emails related to: Nextdoor, Classmates
 Email:
 Sender: {sender}
 Subject: {subject}
