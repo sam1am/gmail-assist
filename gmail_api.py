@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from openai_api import evaluate_importance
 import time
 from termcolor import colored
+from multiprocessing import Process, Queue
+
 
 # Define function to connect to Gmail API
 def connect_gmail_api():
@@ -53,7 +55,7 @@ def get_label_ids_by_name(service, label_names):
 
 def label_unread_emails(service, label_ids):
     try:
-        results = service.users().messages().list(userId='me', q='is:unread -label:gptUrgent -label:gptImportant -label:gptNormal -label:gptLow -label:gptJunk').execute()
+        results = service.users().messages().list(userId='me', q='is:unread').execute()
         print(f"Found {len(results['messages'])} unread messages.")
         messages = results.get('messages', [])
         if not messages:
@@ -62,44 +64,8 @@ def label_unread_emails(service, label_ids):
             print('Proceeding with labeling...')
             for message in messages:
                 msg = service.users().messages().get(userId='me', id=message['id'], format='full').execute()
-                headers = msg['payload']['headers']
-                for header in headers:
-                    if header['name'] == 'From':
-                        sender = header['value']
-                    elif header['name'] == 'Subject':
-                        subject = header['value']
-                if 'parts' in msg['payload']:
-                    parts = msg['payload']['parts']
-                    body = ''
-                    for part in parts:
-                        if part['mimeType'] == 'text/plain':
-                            body = part['body'].get('data', '')
-                        elif part['mimeType'] == 'text/html':
-                            html = part['body'].get('data', '')
-                            soup = BeautifulSoup(html, 'html.parser')
-                            body += soup.get_text()
-                    if not body:
-                        body = parts[0]['body'].get('data', '')
-                    try:
-                        if body:
-                            body = base64.urlsafe_b64decode(body).decode()
-                        else:
-                            body = ''
-                    except binascii.Error as e:
-                        print(f"Error decoding base64-encoded data: {e}")
-                else:
-                    body = msg['payload']['body'].get('data', '')
-                    try:
-                        if body:
-                            body = base64.urlsafe_b64decode(body).decode()
-                        else:
-                            body = ''
-                    except binascii.Error as e:
-                        print(f"Error decoding base64-encoded data: {e}")
-
-
-
-                info = f"Sender: {sender}\nSubject: {subject}\nBody: {body}"
+                sender, subject, body = extract_email_data(msg)
+                
                 importance = evaluate_importance(sender, subject, body)
                 if importance:
                     label_id = label_ids.get(importance)
@@ -114,3 +80,39 @@ def label_unread_emails(service, label_ids):
                     print(f"Error: Failed to evaluate importance for message {message['id']}")
     except HttpError as error:
         print(f"An error occurred while labeling: {error}")
+
+
+def extract_email_data(msg):
+    headers = msg['payload']['headers']
+    sender = ''
+    subject = ''
+    for header in headers:
+        if header['name'] == 'From':
+            sender = header['value']
+        elif header['name'] == 'Subject':
+            subject = header['value']
+    
+    if 'parts' in msg['payload']:
+        parts = msg['payload']['parts']
+        body = ''
+        for part in parts:
+            if part['mimeType'] == 'text/plain':
+                body = part['body'].get('data', '')
+            elif part['mimeType'] == 'text/html':
+                html = part['body'].get('data', '')
+                soup = BeautifulSoup(html, 'html.parser')
+                body += soup.get_text()
+        if not body:
+            body = parts[0]['body'].get('data', '')
+    else:
+        body = msg['payload']['body'].get('data', '')
+
+    try:
+        if body:
+            body = base64.urlsafe_b64decode(body).decode()
+        else:
+            body = ''
+    except binascii.Error as e:
+        print(f"Error decoding base64-encoded data: {e}")
+    
+    return sender, subject, body

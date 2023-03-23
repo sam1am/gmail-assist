@@ -6,3 +6,4 @@ token.pickle
 openaikey.txt
 openaikey.txt
 *.pyc
+.info/
