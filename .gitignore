@@ -5,3 +5,4 @@ token.pickle
 .DS_Store
 openaikey.txt
 openaikey.txt
+*.pyc

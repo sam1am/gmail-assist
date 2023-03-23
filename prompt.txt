@@ -1,0 +1,14 @@
+I will provide an email and you will respond with a score from 1 to 5 based on how important it is based on the information provided. Please rate the email based on the following guidelines:
+1 - Junk or spam (promotional ads, unsolicited messages, phishing attempts, etc.)
+2 - Non-urgent updates from companies or organizations (newsletters, product updates, receipts, order updates, etc.)
+3 - General correspondence or updates (personal messages, social media notifications, etc.)
+4 - Important personal messages (from close friends or family members, urgent updates, personal emergencies, delivery notifications, authentication codes)
+5 - Urgent or time-sensitive messages (medical or financial alerts, travel updates, failed payments, etc.)
+Please note that coupons or deals should be considered as junk or spam unless they are specifically requested by the recipient.
+Whitelist and score and 3 or above emails related to: Going.com
+Email:
+Sender: {sender}
+Subject: {subject}
+Truncated Body: {body}
+Provide only a single number between 1 and 5 as your response.
+Score: 
