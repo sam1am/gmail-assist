@@ -8,7 +8,7 @@ def load_openai_api_key():
         openai.api_key = f.read()
 
 def evaluate_importance(sender, subject, body):
-    time.sleep(1)
+    time.sleep(0)
     soup = BeautifulSoup(body, "html.parser")
     body = soup.get_text()
     body = body.replace(" ", "").replace("\n", "")

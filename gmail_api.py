@@ -54,32 +54,37 @@ def get_label_ids_by_name(service, label_names):
 
 
 def label_unread_emails(service, label_ids):
-    try:
-        results = service.users().messages().list(userId='me', q='is:unread').execute()
-        print(f"Found {len(results['messages'])} unread messages.")
-        messages = results.get('messages', [])
-        if not messages:
-            print('No unread messages found.')
-        else:
-            print('Proceeding with labeling...')
-            for message in messages:
-                msg = service.users().messages().get(userId='me', id=message['id'], format='full').execute()
-                sender, subject, body = extract_email_data(msg)
-                
-                importance = evaluate_importance(sender, subject, body)
-                if importance:
-                    label_id = label_ids.get(importance)
-                    if label_id:
-                        service.users().messages().modify(userId='me', id=message['id'], body={'addLabelIds': [label_id]}).execute()
-                        print(colored(f"✓{importance}\n", 'blue'))
-                        print("Finished at: " + time.strftime("%H:%M:%S", time.localtime()))
-                        print("\n")
+    while True:
+        try:
+            results = service.users().messages().list(userId='me', q='is:unread').execute()
+            print(f"Found {len(results['messages'])} unread messages.")
+            messages = results.get('messages', [])
+
+            if not messages:
+                print('No unread messages found.')
+                break
+            else:
+                print('Proceeding with labeling...')
+                for message in messages:
+                    msg = service.users().messages().get(userId='me', id=message['id'], format='full').execute()
+                    sender, subject, body = extract_email_data(msg)
+
+                    importance = evaluate_importance(sender, subject, body)
+                    if importance:
+                        label_id = label_ids.get(importance)
+                        if label_id:
+                            service.users().messages().modify(userId='me', id=message['id'], body={'addLabelIds': [label_id]}).execute()
+                            print(colored(f"✓{importance}\n", 'blue'))
+                            print("Finished at: " + time.strftime("%H:%M:%S", time.localtime()))
+                            print("\n")
+                        else:
+                            print(f"Error: Invalid importance rating for message {message['id']}")
                     else:
-                        print(f"Error: Invalid importance rating for message {message['id']}")
-                else:
-                    print(f"Error: Failed to evaluate importance for message {message['id']}")
-    except HttpError as error:
-        print(f"An error occurred while labeling: {error}")
+                        print(f"Error: Failed to evaluate importance for message {message['id']}")
+
+        except HttpError as error:
+            print(f"An error occurred while labeling: {error}")
+            break
 
 
 def extract_email_data(msg):
