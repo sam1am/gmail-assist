@@ -1,5 +1,7 @@
 # Gmail Importance Classifier using GPT-3
 
+Note: this is a proof on concept and may not work as expected. Use at your own risk. 
+
 This script uses OpenAI's GPT-3 to classify the importance of unread emails in Gmail and labels them accordingly. The labels used are:
 
 - gptJunk
