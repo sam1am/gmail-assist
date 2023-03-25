@@ -8,7 +8,6 @@ This script uses OpenAI's GPT-3 to classify the importance of unread emails in G
 - gptImportant
 - gptUrgent 
 
-This is a proof of concept. It works but it's not very optimized. Be patient. YMMV. 
 
 ## Prerequisites
 
@@ -17,7 +16,7 @@ To run this script, you need:
 - A Google Cloud Platform project with the Gmail API enabled
 - Credentials for the Gmail API
 - An OpenAI API key
-- Add the labels listed above to your gmail account
+- ==Add the labels listed above to your gmail account before running the script==
 
 ## Installation
 
